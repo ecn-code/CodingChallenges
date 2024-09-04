@@ -1,19 +1,17 @@
 package com.eliascanalesnieto.challenges.wc;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class CodingChallengeWC {
+public class WcTool {
     public static void main(final String[] args) {
         final List<String> options;
         final List<String> fileNames;
@@ -61,7 +59,7 @@ public class CodingChallengeWC {
 
     private static void processOptions(final List<String> options, final List<String> fileNames) {
         final String optionsProcessed = fileNames.stream()
-                .map(CodingChallengeWC.processOption(options))
+                .map(WcTool.processOption(options))
                 .collect(Collectors.joining("\n"));
         System.out.println(optionsProcessed);
     }
