@@ -5,6 +5,8 @@ import com.eliascanalesnieto.challenges.huffman.model.RowPrefixCode;
 
 import java.io.BufferedReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,12 +37,14 @@ public class CompressionTool {
                     -d <filename to decompress> <filename output>
                     """);
         }
-        final BufferedReader reader = Files.newBufferedReader(Path.of(args[1]), StandardCharsets.ISO_8859_1);
-        final Map<Integer, Long> characterCount = HeaderFileService.read(reader);
+        final BufferedReader reader = Files.newBufferedReader(Path.of(args[1]), StandardCharsets.UTF_8);
+        final Map<Character, Long> characterCount = HeaderFileService.read(reader);
         final Map<String, RowPrefixChar> frequencyTable = CodeCharTableBuilder.build(
                 TreeBuilder.build(characterCount)
         );
-        CompressFile.decompress(frequencyTable, reader, Files.newOutputStream(Path.of(args[2])));
+        final Writer writer = new OutputStreamWriter(Files.newOutputStream(Path.of(args[2])), StandardCharsets.UTF_8);
+        CompressFile.decompress(frequencyTable, reader, writer);
+        writer.close();
     }
 
     private static void compress(final String[] args) throws Exception {
@@ -50,17 +54,18 @@ public class CompressionTool {
                     """);
         }
 
-        final Map<Integer, Long> characterCount = FileCharacterCounter.countCharacters(args[1]);
-        final OutputStream outputStream = Files.newOutputStream(Path.of(args[2]));
-        HeaderFileService.save(characterCount, outputStream);
+        final Map<Character, Long> characterCount = FileCharacterCounter.countCharacters(args[1]);
+        final Writer writer = new OutputStreamWriter(Files.newOutputStream(Path.of(args[2])), StandardCharsets.UTF_8);
+        HeaderFileService.save(characterCount, writer);
 
-        final Map<Integer, RowPrefixCode> frequencyTable = CharCodeTableBuilder.build(
+        final Map<Character, RowPrefixCode> frequencyTable = CharCodeTableBuilder.build(
                 TreeBuilder.build(characterCount)
         );
         CompressFile.compress(
                 frequencyTable,
                 Files.newBufferedReader(Path.of(args[1]), StandardCharsets.UTF_8),
-                outputStream
+                writer
         );
+        writer.close();
     }
 }

@@ -29,7 +29,7 @@ public class CodeCharTableBuilder {
     }
 
     private static void fillLeaf(final Leaf leaf, final String code, final Map<String, RowPrefixChar> table) {
-        table.put(code, new RowPrefixChar(leaf.count(), leaf.character(), (char) leaf.character()));
+        table.put(code, new RowPrefixChar(leaf.count(), leaf.character()));
     }
 
     private static void fillNode(final Node node, final String code, final Map<String, RowPrefixChar> table) throws Exception {

@@ -9,12 +9,13 @@ import java.util.Map;
 
 public class FileCharacterCounter {
 
-    public static Map<Integer, Long> countCharacters(final String filename) {
+    public static Map<Character, Long> countCharacters(final String filename) {
         final Path path = Path.of(filename);
-        final Map<Integer, Long> count = new HashMap<>();
+        final Map<Character, Long> count = new HashMap<>();
         try (var reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            int character;
-            while ((character = reader.read()) != -1) {
+            int characterValue;
+            while ((characterValue = reader.read()) != -1) {
+                final char character = (char) characterValue;
                 if(!count.containsKey(character)) {
                     count.put(character, 0L);
                 }

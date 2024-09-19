@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class CharCodeTableBuilder {
 
-    public static Map<Integer, RowPrefixCode> build(final Node root) throws Exception {
-        final Map<Integer, RowPrefixCode> table = new HashMap<>();
+    public static Map<Character, RowPrefixCode> build(final Node root) throws Exception {
+        final Map<Character, RowPrefixCode> table = new HashMap<>();
         fill(root, "", table);
         return table;
     }
 
-    private static void fill(final Branch branch, final String code, final Map<Integer, RowPrefixCode> table) throws Exception {
+    private static void fill(final Branch branch, final String code, final Map<Character, RowPrefixCode> table) throws Exception {
         if(branch == null) {
             return;
         }
@@ -28,11 +28,11 @@ public class CharCodeTableBuilder {
         }
     }
 
-    private static void fillLeaf(final Leaf leaf, final String code, final Map<Integer, RowPrefixCode> table) {
-        table.put(leaf.character(), new RowPrefixCode(leaf.count(), code, (char) leaf.character()));
+    private static void fillLeaf(final Leaf leaf, final String code, final Map<Character, RowPrefixCode> table) {
+        table.put(leaf.character(), new RowPrefixCode(leaf.count(), code));
     }
 
-    private static void fillNode(final Node node, final String code, final Map<Integer, RowPrefixCode> table) throws Exception {
+    private static void fillNode(final Node node, final String code, final Map<Character, RowPrefixCode> table) throws Exception {
         fill(node.left(), STR."\{code}0", table);
         fill(node.right(), STR."\{code}1", table);
     }

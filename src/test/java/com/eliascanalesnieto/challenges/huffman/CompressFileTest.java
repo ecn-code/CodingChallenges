@@ -5,44 +5,43 @@ import com.eliascanalesnieto.challenges.huffman.model.RowPrefixCode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.math.BigInteger;
-import java.util.Arrays;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-import static com.eliascanalesnieto.challenges.huffman.CompressFile.convertToSigned;
 
 public class CompressFileTest {
 
     @Test
     void givenTextWhenCompressThenIsSmall() throws IOException {
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final Writer writer = new OutputStreamWriter(byteArrayOutputStream, StandardCharsets.ISO_8859_1);
+        final String text = "Hola me llamo Elias";
         CompressFile.compress(Map.of(
-                        (int) ' ', new RowPrefixCode(4L, "00", ' '),
-                        (int) 'a', new RowPrefixCode(37L, "110", 'a'),
-                        (int) 's', new RowPrefixCode(42L, "11100", 's'),
-                        (int) 'E', new RowPrefixCode(42L, "10110", 'E'),
-                        (int) 'e', new RowPrefixCode(42L, "11101", 'e'),
-                        (int) 'H', new RowPrefixCode(42L, "10111", 'H'),
-                        (int) 'i', new RowPrefixCode(42L, "1010", 'i'),
-                        (int) 'l', new RowPrefixCode(42L, "01", 'l'),
-                        (int) 'm', new RowPrefixCode(42L, "1111", 'm'),
-                        (int) 'o', new RowPrefixCode(42L, "100", 'o')),
-                new StringReader("Hola me llamo Elias"),
-                byteArrayOutputStream
+                        ' ', new RowPrefixCode(4L, "00"),
+                        'a', new RowPrefixCode(37L, "110"),
+                        's', new RowPrefixCode(42L, "11100"),
+                        'E', new RowPrefixCode(42L, "10110"),
+                        'e', new RowPrefixCode(42L, "11101"),
+                        'H', new RowPrefixCode(42L, "10111"),
+                        'i', new RowPrefixCode(42L, "1010"),
+                        'l', new RowPrefixCode(42L, "01"),
+                        'm', new RowPrefixCode(42L, "1111"),
+                        'o', new RowPrefixCode(42L, "100")),
+                new StringReader(text),
+                writer
         );
 
+        writer.close();
         final byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-
+        Assertions.assertTrue(text.length() > byteArray.length);
         Assertions.assertEquals(List.of(
                 "11011110",
                 "10011100",
@@ -61,14 +60,16 @@ public class CompressFileTest {
     @Test
     void givenTextWhenCompressThenCorrect() throws IOException {
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final Writer writer = new OutputStreamWriter(byteArrayOutputStream, StandardCharsets.ISO_8859_1);
         CompressFile.compress(Map.of(
-                        (int) 'U', new RowPrefixCode(120L, "0", 'U'),
-                        (int) 'E', new RowPrefixCode(37L, "10", 'E'),
-                        (int) ' ', new RowPrefixCode(42L, "11", ' ')),
+                        'U', new RowPrefixCode(120L, "0"),
+                        'E', new RowPrefixCode(37L, "10"),
+                        ' ', new RowPrefixCode(42L, "11")),
                 new StringReader("EUEE UUUUU EU UUU"),
-                byteArrayOutputStream
+                writer
         );
 
+        writer.close();
         final byte[] byteArray = byteArrayOutputStream.toByteArray();
 
 
@@ -78,7 +79,6 @@ public class CompressFileTest {
                 "11110011",
                 "1000"
         ), IntStream.range(0, byteArray.length)
-                        .peek(i -> System.err.println((int)byteArray[i]))
                 .mapToObj(i -> Integer.toBinaryString(byteArray[i] & 0xFF))
                 .toList());
     }
@@ -86,22 +86,21 @@ public class CompressFileTest {
     @Test
     void givenBinaryWhenDecompressThenIsText() throws IOException {
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final Writer writer = new OutputStreamWriter(byteArrayOutputStream);
         CompressFile.decompress(Map.of(
-                        "0", new RowPrefixChar(120L, 'U', 'U'),
-                        "10", new RowPrefixChar(37L, 'E', 'E'),
-                        "11", new RowPrefixChar(42L, ' ', ' ')),
+                        "0", new RowPrefixChar(120L, 'U'),
+                        "10", new RowPrefixChar(37L, 'E'),
+                        "11", new RowPrefixChar(42L, ' ')),
                 new CharArrayReader(new char[]{
                         (char) Integer.parseInt("11001010", 2),
                         (char) Integer.parseInt("11100000", 2),
                         (char) Integer.parseInt("11110011", 2),
                         (char) Integer.parseInt("1000", 2)
                 }),
-                byteArrayOutputStream
+                writer
         );
-
-        final byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-        Assertions.assertEquals("EUEE UUUUU EU UUU", new String(byteArray));
+        writer.close();
+        Assertions.assertEquals("EUEE UUUUU EU UUU", byteArrayOutputStream.toString());
     }
 
     private static String leftPad(String binaryByte) {

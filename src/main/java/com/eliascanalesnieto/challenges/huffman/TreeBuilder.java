@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 
 public class TreeBuilder {
 
-    public static Node build(final Map<Integer, Long> count) {
+    public static Node build(final Map<Character, Long> count) {
         final List<Branch> list = count.entrySet().stream()
-                .sorted(Comparator.comparingLong(Map.Entry::getValue))
+                .sorted(compare())
                 .map(entry -> new Leaf(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toCollection(ArrayList::new));
         if(list.size() < 2) {
@@ -30,6 +30,16 @@ public class TreeBuilder {
         }
 
         return (Node) list.getFirst();
+    }
+
+    private static Comparator<Map.Entry<Character, Long>> compare() {
+        return (entry1, entry2) -> {
+            final int longComparation = Long.compare(entry1.getValue(), entry2.getValue());
+            if(longComparation == 0) {
+                return Character.compare(entry1.getKey(), entry2.getKey());
+            }
+            return longComparation;
+        };
     }
 
     private static int getIndexByCount(final List<Branch> list, final Node node) {

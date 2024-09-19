@@ -17,9 +17,9 @@ class FileCharacterCounterTest extends SystemOutTool {
 
     @Test
     void givenFileWhenCountThenResultIsOk() {
-        Map<Integer, Long> count = FileCharacterCounter.countCharacters(filePath);
-        Assertions.assertEquals(333, count.get((int) 'X'));
-        Assertions.assertEquals(223000, count.get((int) 't'));
+        Map<Character, Long> count = FileCharacterCounter.countCharacters(filePath);
+        Assertions.assertEquals(333, count.get('X'));
+        Assertions.assertEquals(223000, count.get('t'));
     }
 
 }

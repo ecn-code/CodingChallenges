@@ -27,10 +27,10 @@ class CharCodeTableBuilderTest {
         );
 
         Assertions.assertEquals(Map.of(
-                (int) 'C', new RowPrefixCode(12L, "0", 'C'),
-                (int) 'j', new RowPrefixCode(9L, "11", 'j'),
-                (int) 'X', new RowPrefixCode(1L, "100", 'X'),
-                (int) 'I', new RowPrefixCode(5L, "101", 'I')
+                'C', new RowPrefixCode(12L, "0"),
+                'j', new RowPrefixCode(9L, "11"),
+                'X', new RowPrefixCode(1L, "100"),
+                'I', new RowPrefixCode(5L, "101")
         ), CharCodeTableBuilder.build(tree));
     }
 
@@ -67,14 +67,14 @@ class CharCodeTableBuilderTest {
         );
 
         Assertions.assertEquals(Map.of(
-                (int) 'E', new RowPrefixCode(120L, "0", 'E'),
-                (int) 'U', new RowPrefixCode(37L, "100", 'U'),
-                (int) 'D', new RowPrefixCode(42L, "101", 'D'),
-                (int) 'L', new RowPrefixCode(42L, "110", 'L'),
-                (int) 'C', new RowPrefixCode(32L, "1110", 'C'),
-                (int) 'M', new RowPrefixCode(24L, "11111", 'M'),
-                (int) 'Z', new RowPrefixCode(2L, "111100", 'Z'),
-                (int) 'K', new RowPrefixCode(7L, "111101", 'K')
+                'E', new RowPrefixCode(120L, "0"),
+                'U', new RowPrefixCode(37L, "100"),
+                'D', new RowPrefixCode(42L, "101"),
+                'L', new RowPrefixCode(42L, "110"),
+                'C', new RowPrefixCode(32L, "1110"),
+                'M', new RowPrefixCode(24L, "11111"),
+                'Z', new RowPrefixCode(2L, "111100"),
+                'K', new RowPrefixCode(7L, "111101")
         ), CharCodeTableBuilder.build(tree));
     }
 

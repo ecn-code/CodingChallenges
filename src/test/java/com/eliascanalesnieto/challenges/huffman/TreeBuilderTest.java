@@ -12,10 +12,10 @@ class TreeBuilderTest {
     @Test
     void givenCountTableWhenBuildTreeThenTreeSimple() {
         final Node root = TreeBuilder.build(Map.of(
-                (int) 'X', 1L,
-                (int) 'C', 12L,
-                (int) 'I', 5L,
-                (int) 'j', 9L
+                'X', 1L,
+                'C', 12L,
+                'I', 5L,
+                'j', 9L
         ));
 
         Assertions.assertEquals(new Node(
@@ -36,14 +36,14 @@ class TreeBuilderTest {
     @Test
     void givenTableCountWhenBuildTreeComplex() {
         final Node root = TreeBuilder.build(Map.of(
-                (int) 'C', 32L,
-                (int) 'D', 42L,
-                (int) 'E', 120L,
-                (int) 'K', 7L,
-                (int) 'L', 42L,
-                (int) 'M', 24L,
-                (int) 'U', 37L,
-                (int) 'Z', 2L
+                'C', 32L,
+                'D', 42L,
+                'E', 120L,
+                'K', 7L,
+                'L', 42L,
+                'M', 24L,
+                'U', 37L,
+                'Z', 2L
         ));
 
         Assertions.assertEquals(new Node(
